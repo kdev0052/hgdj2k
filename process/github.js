@@ -41,24 +41,46 @@ const createRelatedAccounts = async function(user, page, snap) {
     await page.waitFor(600)
     await page.goto("https://zeit.co/signup")
     await page.waitFor(1000)
+ await page.click("#__next .github-form button")
 
-    await page.click("#__next .github-form button")
+    await page.waitFor(2000)
+    await page.evaluate(
+        () => {
+            let d = document.querySelector("#js-oauth-authorize-btn")
+            if(d) d.click()
+        }
+    )
 
-    await page.waitFor(1000)
-    await page.click("#js-oauth-authorize-btn")
     await page.waitFor(600)
 
     await snap(page, "GH1-ZEIT")
+  
+   await page.evaluate(
+        () => {
+            let d = document.querySelector("#js-oauth-authorize-btn")
+            if(d) d.click()
+        }
+    )
 
+let zeitCoToken
+try {
+await page.waitFor(1500)
+    //await snap(page, "GH1.5-ZEIT")
     await page.goto("https://zeit.co/account/tokens")
-    await page.waitFor(1200)
+    await page.waitFor(1500)
       await snap(page, "GH2-ZEIT")
+    await page.waitFor(1800)  
     await page.click(".actions > button")
     await page.waitFor(600)
     await page.type('input[placeholder="New Token"]', "apptoken")
     await page.click("body div.wrapper.active > div > div.focus-trap > footer > button:nth-child(2)")
     await page.waitFor(600)
-    const zeitCoToken = await page.evaluate(() => document.querySelector("body  div.wrapper.active > div > div.focus-trap > div > div > input").value)
+    zeitCoToken = await page.evaluate(() => document.querySelector("body  div.wrapper.active > div > div.focus-trap > div > div > input").value)
+    
+} catch (e) {
+    console.log("nonfatal zeit err :", e)
+}
+
     return {
         user: user,
         apiKey: apiKey,
