@@ -227,4 +227,5 @@ const snap = async function(page, name) {
         return;
     }
     browser.close()
+    process.exit(0);
 })();
