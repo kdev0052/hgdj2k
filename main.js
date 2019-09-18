@@ -212,7 +212,7 @@ const snap = async function(page, name) {
         }
 
         console.log("Completed email validation ")
-        await dao.save(user, "github-nokey", "global")
+        //await dao.save(user, "github-nokey", "global")
         console.log("Completed dao 0 ")
         const apiKeys = await github.createRelatedAccounts(user, page, snap)
         console.log("Completed retrieve api keys ")
